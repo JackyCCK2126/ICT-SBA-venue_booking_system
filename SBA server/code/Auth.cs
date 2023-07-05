@@ -1,10 +1,14 @@
-﻿using System;
-using static EasyConsole;
+﻿using static EasyConsole;
 using WatermelonDataTool.Serializer;
 
 class Auth : DataBase
 {
     public static string cred_path = "Auth/credentials.txt";
+    
+    public static Watermelon getCreds()
+    {
+        return GetFromPath(cred_path);
+    }
     private static object myLock = new object();//make sure no multi-thread access auth function at the same time.
     public static string SignIn(string username, string password_or_session)//get session_id string
     {
@@ -14,7 +18,7 @@ class Auth : DataBase
             Watermelon creds = GetFromPath(cred_path);
             if (creds == null)
             {
-                return "error- DB not found";
+                return "error: DB not found";
             }
             string pw_check = creds.getObj<string>(username + "/password");
             string session_check = creds.getObj<string>(username + "/session_id");
@@ -25,7 +29,7 @@ class Auth : DataBase
             }
             if (pw_check == null)
             {
-                return "error- user not found";
+                return "error: user not found";
             }
             //to login: client need to have correct pw or have a updated session_id
             else if (pw_check.ToString() == password_or_session || (session_check.ToString() == password_or_session && !session_expired()))
@@ -59,7 +63,7 @@ class Auth : DataBase
         }
         if (creds.exist(username))
         {
-            return "error- username already exist";
+            return "error: username already exist";
         }
         else
         {//sign up available !

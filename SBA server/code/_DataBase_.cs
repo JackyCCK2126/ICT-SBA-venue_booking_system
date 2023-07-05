@@ -1,16 +1,20 @@
-﻿using System.IO;
-using WatermelonDataTool.Serializer;
+﻿using WatermelonDataTool.Serializer;
+using static EasyConsole;
 
 class DataBase : FileManage
 {
-	public static string root_directory = "/Users/jacky/Desktop/VS project/SBA server/DataBase/";
+	public static string root_directory = "/Users/jacky/Desktop/VS project/SBA/SBA server/DataBase/";
 
     /// <summary>
 	/// if file not found, return an empty serial class.
 	/// </summary>
     public static Watermelon GetFromPath(string @path)
 	{
-		if (!Path.Exists(Path.Combine(root_directory,path))) return new();
+		if (!Path.Exists(Path.Combine(root_directory, path)))
+		{
+			print("DataBase: File not found (" + Path.Combine(root_directory, path) + "), created a new one.");
+			return new();
+		}
 		byte[] data = read(Path.Combine(root_directory,path));
 		Decrypt(data,12345678);
 		return new Watermelon(data);
